@@ -1,0 +1,60 @@
+.picture
+{
+    max-width: 100%;
+}
+.sermon_pic
+{
+    max-width: 100%;
+}
+.sermon_list_element
+{
+    float: left;
+    margin: 10px 10px 20px 10px;
+    min-width: 150px;
+    max-width: 20%;
+    color: #000000 !important;
+    text-decoration: none;
+}
+.sermon_list_element img
+{
+}
+.sermon_list_element > div
+{
+    height: 25px;
+}
+.eventtableclass > tbody > tr > td > div
+{
+    display: block;
+}
+.eventtableclass
+{
+    background-color: #e9e9e9;
+    border-color: #ddd;
+    border-radius: 2px;
+}
+.small_group{
+    float: left;
+    min-width: 300px;
+    max-width: 500px;
+    min-height: 100px;
+    border: 4px solid #d7d7d7;
+    background: #eee;
+    font-size: large;
+    margin: 15px;
+}
+.small_group > div{
+    text-align:center;
+    margin: 10px;
+    font-size: larger;
+    font-weight: bold;
+}
+.small_group > table{
+    margin-left: 10%;
+    margin-right: 10%;
+}
+.small_group  *  img{
+    width: 50%;
+    max-height: 450px;
+    display: block;
+    float: left;
+}

@@ -1,0 +1,341 @@
+<!doctype html>
+
+<html lang="de">
+<head>
+    <link rel="stylesheet" href="source/jquery.mobile-1.4.5.min.css" />
+    <link rel="stylesheet" href="source/jw-jqm-cal.css" />
+    <link rel="stylesheet" href="style/ecclesiapp.css" />
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script src="source/jquery-2.1.1.min.js"></script>
+    <script src="source/jquery.mobile-1.4.5.min.js"></script>
+    <script src="source/jw-jqm-cal.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/calendar.js"></script>
+    <script src="js/smallgroup.js"></script>
+    <script src="js/menu_bar.js"></script>
+    <script type="text/javascript" src="PushNotification.js"></script>
+    <script id="panel-init">
+	jQuery(function() {
+	    show_menu("#mainpage","#menulist");
+        });
+    </script>
+    <title>Ecclesia Nürnberg</title>
+</head>
+<body>
+
+<div data-role="panel" data-display="push" id="menupanel" data-theme="b">
+    <ul data-role="listview" data-filter="true" data-filter-placeholder="Suche..." data-inset="true" id="menulist"></ul>
+</div>
+
+<div data-role="page" id="mainpage">
+    <script type="text/javascript">
+	jQuery("#mainpage").on('pageinit',function(){
+	    get_posts(jQuery("#posts"));
+	    $("#testdiv").button().on("tap", testfunc);
+	});
+	document.addEventListener("deviceready", function () {
+	    $("#testdiv").button().on("tap", testfunc);
+	});
+        jQuery("#menupanel").panel({beforeopen: function()
+        {
+        }});
+    </script>
+
+  <div data-role="header">
+    <a href="#menupanel" class="ui-btn ui-icon-bullets ui-btn-icon-left ui-corner-all ui-shadow">Menü</a>
+    <h1>Ecclesia Nürnberg</h1>
+  </div>
+    <div id="testdiv">sssssssss</div>
+  <div data-role="main" class="ui-content">
+      <div id="testdiv"></div>
+    <div id="posts"></div>
+  </div>
+
+  <div data-role="footer">
+    <h1></h1>
+  </div> 
+</div>
+
+<div data-role="page" id="calendarpage">
+    <script type="text/javascript">
+	jQuery("#calendarpage").on('pageinit',function(){
+	    event_cal = new event_calendar($("#eventcalendar"));
+	});
+    </script>
+    <div data-role="header">
+        <a href="#menupanel" class="ui-btn ui-icon-bullets ui-btn-icon-left ui-corner-all ui-shadow">Menü</a>
+	<h1>Kalender</h1>
+    </div>
+
+    <div data-role="content">
+        <div id="eventcalendar"></div>
+    </div>
+
+    <div data-role="footer">
+	<h4></h4>
+    </div>
+</div>
+
+<div data-role="page" id="eventpage">
+    <script type="text/javascript">
+	jQuery("#calendarpage").on('pageinit',function(){
+	});
+    </script>
+    <div data-role="header">
+        <a href="#menupanel" class="ui-btn ui-icon-bullets ui-btn-icon-left ui-corner-all ui-shadow">Menü</a>
+	<h1 id="eventpage_title"></h1>
+    </div>
+
+    <div data-role="content">
+	<img id="event_image" hidden="true" style="width:100%;border-radius:2px;" src="http://www.die-duerrs-im-web.de/ecclesiapp/posts/karfreitag.png" alt="karfreitagbild">
+	<table hidden="true" data-mode="reflow" class="ui-responsive eventtableclass" data-role="table" id="eventpage_infotable">
+	    <thead>
+		<tr><th></th><th></th><th></th></tr>
+	    </thead>
+	    <tbody>
+		<tr hidden="true">
+		    <td>Wo?</td>
+		    <td><div id="event_adress"></div></td>
+		</tr>
+		<tr hidden="true">
+		    <td>Wann?</td>
+		    <td><div id="event_time"></div></td>
+		</tr>
+		<tr hidden="true">
+		    <td>Was?</td>
+		    <td><div id="event_desc"></div></td>
+		</tr>
+		<tr hidden="true">
+		    <td>Weitere Informationen</td>
+		    <td><a id="event_url" href="#">Klick</a></td>
+		</tr>
+	    </tbody>
+	</table>
+    </div>
+
+    <div data-role="footer">
+	<a href="#calendarpage" class="ui-btn ui-icon-back ui-btn-icon-left ui-corner-all ui-shadow">Zurück</a>
+
+    </div>
+</div>
+
+<div data-role="page" id="sermonpage">
+    <script type="text/javascript">
+	jQuery("#sermonpage").on('pageinit',function(){
+	    //$("#sermon_list_tabs").tabs();
+	    $("#mb_refresh_btn").on("click",function(){show_sermons($(".sermon_list"),$("#sermon_table_body"));});
+	    show_sermons($(".sermon_list"),$("#sermon_table_body"));
+	});
+    </script>
+    <div data-role="header">
+        <a href="#menupanel" class="ui-btn ui-icon-bullets ui-btn-icon-left ui-corner-all ui-shadow">Menü</a>
+	<h1>Predigt</h1>
+	<a id="mb_refresh_btn" href="#" data-icon="refresh" data-iconpos="notext">Refresh</a>
+
+    </div>
+
+    <div data-role="content">
+	<div data-role="tabs"  id="sermon_list_tabs">
+	    <div data-role="navbar" class="ui-grid-b">
+		<ul>
+		    <li><a href="#tabs_series">Serien</a></li>
+		    <li><a href="#tabs_sermons">Predigten</a></li>
+		</ul>
+	    </div>
+	    <div id="tabs_series">
+		<form>
+		    <input data-type="search" id="sermon_list_filter_input">
+		</form>
+		<div class="sermon_list" data-filter="true" data-input="#sermon_list_filter_input"></div>
+	    </div>
+	    <div id="tabs_sermons">
+		<form>
+		    <input data-type="search" id="sermon_table_filter_input">
+		</form>
+		<table data-filter="true" data-input="#sermon_table_filter_input" data-role="table" id="sermon_table" data-mode="reflow" class="ui-responsive">
+		    <thead>
+			<tr>
+			    <th data-priority="1">Datum</th>
+			    <th data-priority="2">Titel</th>
+			    <th data-priority="3">Prediger</th>
+			    <th data-priority="4"></th>
+			</tr>
+		    </thead>
+		    <tbody id="sermon_table_body">
+			
+		    </tbody>
+		</table>
+	    </div>
+	</div>
+    </div>
+
+    <div data-role="footer">
+	<h4>Page Footer</h4>
+    </div>
+</div>
+
+<div data-role="page" id="seriespage_content">
+    <script type="text/javascript">
+	jQuery("#seriespage_content").on('pageinit',function(){
+	});
+    </script>
+    <div data-role="header">
+        <a href="#menupanel" class="ui-btn ui-icon-bullets ui-btn-icon-left ui-corner-all ui-shadow">Menü</a>
+	<h1 id="series_titel">Predigt</h1>
+    </div>
+
+    <div data-role="content">
+	<div id="series_view"></div>
+	<form>
+	    <input data-type="search" id="">
+	</form>
+	<table data-filter="true" data-input="#series_table_filter_input" data-role="table" id="sermon_table" data-mode="reflow" class="ui-responsive">
+	    <thead>
+		<tr>
+		    <th data-priority="1">Datum</th>
+		    <th data-priority="2">Titel</th>
+		    <th data-priority="3">Prediger</th>
+		    <th data-priority="4"></th>
+    		</tr>
+	    </thead>
+	    <tbody id="series_table_body">		
+	    </tbody>
+	</table>
+    </div>
+    <div data-role="footer">
+	<h4>Page Footer</h4>
+    </div>
+</div>
+
+<div data-role="page" id="smallgrouppage">
+    <script type="text/javascript">
+        jQuery("#smallgrouppage").on('pageinit', function () {
+            get_small_groups();
+	});
+    </script>
+    <div data-role="header">
+        <a href="#menupanel" class="ui-btn ui-icon-bullets ui-btn-icon-left ui-corner-all ui-shadow">Menü</a>
+	<h1>Kleingruppen</h1>
+    </div>
+
+    <div data-role="content">
+        <div id="small_groups_posts">
+
+        </div>
+    </div>
+
+    <div data-role="footer">
+	<h4>Page Footer</h4>
+    </div>
+</div>
+
+<div data-role="page" id="prayerpage">
+    <script type="text/javascript">
+	jQuery("#prayerpage").on('pageinit',function(){
+	});
+    </script>
+	<div data-role="header">
+                <a href="#menupanel" class="ui-btn ui-icon-bullets ui-btn-icon-left ui-corner-all ui-shadow">Menü</a>
+		<h1>Gebet</h1>
+	</div>
+
+	<div data-role="content">
+		<p>Page content goes here.</p>
+	</div>
+
+	<div data-role="footer">
+		<h4>Page Footer</h4>
+	</div>
+</div>
+
+<div data-role="page" id="servicepage">
+    <script type="text/javascript">
+	jQuery("#servicepage").on('pageinit',function(){
+	});
+    </script>
+    <div data-role="header">
+        <a href="#menupanel" class="ui-btn ui-icon-bullets ui-btn-icon-left ui-corner-all ui-shadow">Menü</a>
+	<h1>Dienst</h1>
+    </div>
+
+    <div data-role="content">
+	<p>Page content goes here.</p>
+    </div>
+
+    <div data-role="footer">
+	<h4>Page Footer</h4>
+    </div>
+</div>
+
+<div data-role="page" id="dreamteampage">
+    <script type="text/javascript">
+	jQuery("#dreamteampage").on('pageinit',function(){
+	});
+    </script>
+    <div data-role="header">
+        <a href="#menupanel" class="ui-btn ui-icon-bullets ui-btn-icon-left ui-corner-all ui-shadow">Menü</a>
+	<h1>Dreamteam</h1>
+    </div>
+
+    <div data-role="content">
+	<p>Page content goes here.</p>
+    </div>
+
+    <div data-role="footer">
+	<h4>Page Footer</h4>
+    </div>
+</div>
+
+<div data-role="page" id="settingspage">
+    <script type="text/javascript">
+	jQuery("#settingspage").on('pageinit',function(){
+	});
+    </script>
+    <div data-role="header">
+        <a href="#menupanel" class="ui-btn ui-icon-bullets ui-btn-icon-left ui-corner-all ui-shadow">Menü</a>
+	<h1>Einstellungen</h1>
+    </div>
+
+    <div data-role="content">
+	<h3>Login</h3>
+	<table>
+	    <tr>
+		<td>Email</td>
+		<td><input type="text"></td>
+	    </tr>
+	    <tr>
+		<td>Passwort</td>
+		<td><input type="text"></td>
+	    </tr>
+	</table>
+	
+	<h3>Push-Nachrichten</h3>
+	<table>
+	    <tr>
+		<td>Predigten</td>
+		<td>
+		    <select id="sermon_flip" name="sermon_flip" data-role="slider">
+			<option value="off">Aus</option>
+			<option value="on">An</option>
+		    </select>
+		</td>
+	    </tr>
+	    <tr>
+		<td>News</td>
+		<td>
+		    <select id="news_flip" name="news_flip" data-role="slider">
+			<option value="off">Aus</option>
+			<option value="on">An</option>
+		    </select>
+		</td>
+	    </tr>
+	</table>
+    </div>
+
+    <div data-role="footer">
+	<h4>Page Footer</h4>
+    </div>
+</div>
+
+</body>
+</html>
